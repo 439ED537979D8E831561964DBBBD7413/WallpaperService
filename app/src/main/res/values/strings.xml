@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">WallpaperService</string>
+    <string name="desc">Set Video Wallpaper(MIUI Lock Screen Mode)</string>
+</resources>
