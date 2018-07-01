@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private android.widget.Button btnSet;
     private android.widget.VideoView videoView;
 
+    private DatabaseHandler handler;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         btnPick.setOnClickListener(this);
         btnSet.setOnClickListener(this);
+
+        handler = new DatabaseHandler(this);
     }
 
     @Override
@@ -65,28 +69,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btnSet:
                 Log.e("click_path", PrefUtils.getPath(getApplicationContext()));
+                Log.e("db_path", handler.getPath());
                 LiveWallpaperService.setToWallpaper(MainActivity.this);
-                /*Intent intent = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
-                intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, new ComponentName(this, LiveWallpaperService.class));
-                intent.putExtra("SET_LOCKSCREEN_WALLPAPER", true);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    intent.addFlags(WallpaperManager.FLAG_LOCK);
-                }
-
-                try {
-                    startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    intent = new Intent();
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setAction(WallpaperManager.ACTION_LIVE_WALLPAPER_CHOOSER);
-                    try {
-                        startActivity(intent);
-                    } catch (Exception e2) {
-                        e2.printStackTrace();
-                        Toast.makeText(MainActivity.this, "Error", Toast.LENGTH_LONG).show();
-                    }
-                }*/
                 break;
         }
     }
@@ -109,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             videoView.start();
 
             PrefUtils.setPath(getApplicationContext(), videoPath);
+
+            handler.savePath(videoPath);
 
         }
     }

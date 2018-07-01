@@ -1,6 +1,5 @@
 package com.droidbyme.wallpaperservice;
 
-import android.annotation.SuppressLint;
 import android.app.WallpaperManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -15,6 +14,8 @@ import android.widget.Toast;
 import java.io.IOException;
 
 public class LiveWallpaperService extends WallpaperService {
+
+    private DatabaseHandler handler;
 
     @Override
     public Engine onCreateEngine() {
@@ -32,7 +33,7 @@ public class LiveWallpaperService extends WallpaperService {
         int i = 0, ij = 0;
 
         public WallpaperEngine(LiveWallpaperService liveWallpaperService) {
-
+            handler = new DatabaseHandler(getApplicationContext());
         }
 
         @Override
@@ -75,7 +76,8 @@ public class LiveWallpaperService extends WallpaperService {
             mediaPlayer.setSurface(holder.getSurface());
 
             try {
-                dz = PrefUtils.getPath(getApplicationContext());
+                //dz = PrefUtils.getPath(getApplicationContext());
+                dz = handler.getPath();
                 Log.e("dz_path", dz);
                 mediaPlayer.setDataSource(dz);
                 mediaPlayer.setVolume(0f, 0f);
@@ -115,7 +117,8 @@ public class LiveWallpaperService extends WallpaperService {
                         mediaPlayer.start();
                     }
                 }
-                String xr2 = PrefUtils.getPath(getApplicationContext());
+                //String xr2 = PrefUtils.getPath(getApplicationContext());
+                String xr2 = handler.getPath();
                 if (!xr2.equals(dz)) {
                     start();
                     Toast.makeText(LiveWallpaperService.this, "Success", Toast.LENGTH_SHORT).show();
@@ -131,7 +134,7 @@ public class LiveWallpaperService extends WallpaperService {
         }
     }
 
-    
+
     public static void setToWallpaper(Context context) {
         Intent intent = new Intent(WallpaperManager.ACTION_CHANGE_LIVE_WALLPAPER);
         intent.putExtra(WallpaperManager.EXTRA_LIVE_WALLPAPER_COMPONENT, new ComponentName(context, LiveWallpaperService.class));
